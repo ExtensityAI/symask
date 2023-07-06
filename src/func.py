@@ -46,4 +46,4 @@ class SymAsk(Expression):
         with TokenTracker() as tracker:
             res = self.conv(query, *args, **kwargs)
         self.conv.save(self.temp_file, replace=True)
-        return res
+        return f"{res}\n{tracker}" 
