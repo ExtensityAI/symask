@@ -45,5 +45,5 @@ class SymAsk(Expression):
             return ''
 
         res = self.conv(query, *args, **kwargs)
-        self.conv.save(self.temp_file)
+        self.conv.save(self.temp_file, replace=True)
         return res
