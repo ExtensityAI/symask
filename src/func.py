@@ -13,7 +13,9 @@ class SymAsk(Expression):
         os.makedirs(self.temp_path, exist_ok=True)
         self.temp_file = self.temp_path / 'symask.pkl'
         if os.path.exists(self.temp_file):
-            self.conv = Symbol.load(self.temp_file)
+            obj = Symbol.load(self.temp_file)
+            self.conv = Conversation(str(obj), auto_print=False)
+            self.conv._memory = str(obj)
         else:
             self.conv = Conversation(auto_print=False)
 
@@ -37,9 +39,6 @@ class SymAsk(Expression):
         if 'file' in kwargs:
             self.conv.store_file(kwargs['file'])
             del kwargs['file']
-
-        if 'recall' in kwargs:
-            return self.conv.recall(kwargs['recall'])
 
         if query is None:
             return ''
