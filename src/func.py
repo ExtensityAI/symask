@@ -44,4 +44,6 @@ class SymAsk(Expression):
         if query is None:
             return ''
 
-        return self.conv(query, *args, **kwargs)
+        res = self.conv(query, *args, **kwargs)
+        self.conv.save(self.temp_file)
+        return res
