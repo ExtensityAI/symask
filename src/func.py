@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Optional
 from symai import Symbol, Expression
+from symai.components import TokenTracker
 from symai.extended.conversation import Conversation
 
 
@@ -42,7 +43,7 @@ class SymAsk(Expression):
 
         if query is None:
             return ''
-
-        res = self.conv(query, *args, **kwargs)
+        with TokenTracker() as tracker:
+            res = self.conv(query, *args, **kwargs)
         self.conv.save(self.temp_file, replace=True)
         return res
