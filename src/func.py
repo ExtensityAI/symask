@@ -1,18 +1,47 @@
-from symai import Expression, Function
+import os
+from pathlib import Path
+from typing import Optional
+from symai import Symbol, Expression
+from symai.extended.conversation import Conversation
 
 
-FUNCTION_DESCRIPTION = '''
-# TODO: Your function description here.
-{template}
-'''
-
-
-class MyExpression(Expression):
+class SymAsk(Expression):
     def __init__(self):
         super().__init__()
-        self.fn = Function(FUNCTION_DESCRIPTION)
+        # get current file location as absolute path
+        self.temp_path = Path(__file__).parent.absolute() / '../.tmp/'
+        os.makedirs(self.temp_path, exist_ok=True)
+        self.temp_file = self.temp_path / 'symask.pkl'
+        if os.path.exists(self.temp_file):
+            self.conv = Symbol.load(self.temp_file)
+        else:
+            self.conv = Conversation(auto_print=False)
 
-    def forward(self, data, template: str = '', *args, **kwargs):
-        data = self._to_symbol(data)
-        self.fn.prompt.format(template=template)
-        return self.fn(data, *args, **kwargs)
+    def forward(self, query: Optional[str] = None, fn: Optional[str] = None, *args, **kwargs):
+        query = self._to_symbol(query)
+        if 'init' in kwargs or 'drop' in kwargs or 'reset' in kwargs:
+            self.conv.drop()
+            if 'drop' in kwargs:
+                del kwargs['drop']
+            if 'reset' in kwargs:
+                del kwargs['reset']
+            if 'init' in kwargs:
+                self.conv.store_system_message(kwargs['init'])
+                del kwargs['init']
+
+        if 'forget' in kwargs:
+            self.conv.drop()
+            self.conv.forget(kwargs['forget'])
+            del kwargs['forget']
+
+        if 'file' in kwargs:
+            self.conv.store_file(kwargs['file'])
+            del kwargs['file']
+
+        if 'recall' in kwargs:
+            return self.conv.recall(kwargs['recall'])
+
+        if query is None:
+            return ''
+
+        return self.conv(query, *args, **kwargs)

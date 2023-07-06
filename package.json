@@ -5,12 +5,12 @@
     "expressions": [
         {
             "module": "src/func",
-            "type": "MyExpression"
+            "type": "SymAsk"
         }
     ],
     "run": {
         "module": "src/func",
-        "type": "MyExpression"
+        "type": "SymAsk"
     },
     "dependencies": []
 }
