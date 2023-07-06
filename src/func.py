@@ -24,6 +24,7 @@ class SymAsk(Expression):
         query = self._to_symbol(query)
         if 'init' in kwargs or 'drop' in kwargs or 'reset' in kwargs:
             self.conv.drop()
+            self.conv.save(self.temp_file, replace=True)
             if 'drop' in kwargs:
                 del kwargs['drop']
             if 'reset' in kwargs:
