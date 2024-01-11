@@ -7,8 +7,8 @@ from symai.extended.conversation import Conversation
 
 
 class SymAsk(Expression):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         # get current file location as absolute path
         self.temp_path = Path(__file__).parent.absolute() / '../.tmp/'
         os.makedirs(self.temp_path, exist_ok=True)
