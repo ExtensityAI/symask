@@ -4,6 +4,7 @@ from typing import Optional
 from symai import Symbol, Expression
 from symai.components import TokenTracker
 from symai.extended.conversation import Conversation
+from symai.ops.primitives import PersistencePrimitives
 
 
 class SymAsk(Expression):
@@ -14,7 +15,7 @@ class SymAsk(Expression):
         os.makedirs(self.temp_path, exist_ok=True)
         self.temp_file = self.temp_path / 'symask.pkl'
         if os.path.exists(self.temp_file):
-            obj = Symbol.load(self.temp_file)
+            obj = PersistencePrimitives.load(self.temp_file)
             self.conv = Conversation(str(obj), auto_print=False)
             self.conv._memory = str(obj)
         else:
